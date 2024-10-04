@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Busters - Mental Math Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <script src="confetti.js" defer></script>
+    <style>
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: #e0f7fa;
+            color: #00796b;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #00796b;
+            color: white;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        section {
+            display: none;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1, h2 {
+            margin: 0;
+        }
+        .styled-button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .styled-button:hover {
+            background-color: #004d40;
+        }
+        .game-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login-container input {
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #00796b;
+            border-radius: 5px;
+            width: 200px;
+        }
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        /* Make canvas fill the screen */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none; /* Start hidden */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎉 Brain Busters! 🎉</h1>
+        <nav>
+            <ul>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#game" id="play-game" class="nav-link">Play Game</a></li>
+                <li><a href="#contact" class="nav-link">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="about">
+            <h2>About the Game</h2>
+            <p>Brain Busters is an exciting adventure where kids can master mental math while having a blast! 🧠💥</p>
+        </section>
+
+        <section id="game">
+            <h2>Select Difficulty Level</h2>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <h2>Login to Play!</h2>
+            <div class="login-container">
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <button id="login-btn" class="styled-button">Login</button>
+                <button id="register-btn" class="styled-button">Register</button>
+                <p id="login-feedback"></p>
+            </div>
+        </section>
+
+        <section id="welcome" style="display: none;">
+            <h2>🎉 Welcome! Let’s play some math! 🎉</h2>
+            <div class="game-container">
+                <div class="question-text" id="question"></div>
+                <input type="text" id="answer" placeholder="Your answer...">
+                <button id="submit-btn" class="styled-button">Submit</button>
+                <button id="hint-btn" class="styled-button">Hint</button>
+                <p id="feedback" style="font-weight: bold;"></p>
+                <p id="hint-text" style="color: orange; display: none;">Think about the basic operations! 😄</p>
+            </div>
+        </section>
+
+        <section id="registration" style="display: none;">
+            <h2>Register</h2>
+            <div class="login-container">
+                <input type="text" id="new-username" placeholder="Username">
+                <input type="password" id="new-password" placeholder="Password">
+                <button id="register-confirm-btn" class="styled-button">Register</button>
+                <p id="register-feedback"></p>
+            </div>
+        </section>
+
+        <section id="contact" style="display: none;">
+            <h2>Contact Us</h2>
+            <p>If you have any questions or want to share your score, send us a message! ✉️</p>
+            <form id="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit" class="styled-button">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Brain Busters. All rights reserved. Powered by giggles and numbers! 😂</p>
+    </footer>
+
+    <!-- Canvas for confetti -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <script>
+        // Additional JavaScript to enhance functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const welcomeSection = document.getElementById('welcome');
+            const playGameSection = document.getElementById('game');
+            const registrationSection = document.getElementById('registration');
+            const canvas = document.getElementById('confettiCanvas');
+            const context = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let users = {};
+            let currentDifficulty = 'easy';
+            let currentQuestion = {};
+            let score = 0;
+
+            document.getElementById('play-game').addEventListener('click', () => {
+                playGameSection.style.display = 'block';
+                registrationSection.style.display = 'none';
+                welcomeSection.style.display = 'none';
+                document.getElementById('contact').style.display = 'none';
+            });
+
+            document.getElementById('login-btn').addEventListener('click', login);
+            document.getElementById('register-btn').addEventListener('click', showRegistration);
+            document.getElementById('register-confirm-btn').addEventListener('click', register);
+            document.getElementById('difficulty').addEventListener('change', (e) => {
+                currentDifficulty = e.target.value;
+                generateQuestion();
+            });
+            document.getElementById('submit-btn').addEventListener('click', checkAnswer);
+            document.getElementById('hint-btn').addEventListener('click', showHint);
+
+            function login() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                if (users[username] && users[username] === password) {
+                    document.getElementById('login-feedback').innerText = 'Login successful! 🎉';
+                    welcomeSection.style.display = 'block';
+                    playGameSection.style.display = 'none';
+                    generateQuestion();
+                } else {
+                    document.getElementById('login-feedback').innerText = 'Invalid username or password. Try again! 🚫';
+                }
+            }
+
+            function showRegistration() {
+                registrationSection.style.display = 'block';
+                playGameSection.style.display = 'none';
+                welcomeSection.style.display = 'none';
+            }
+
+            function register() {
+                const newUsername = document.getElementById('new-username').value;
+                const newPassword = document.getElementById('new-password').value;
+                if (users[newUsername]) {
+                    document.getElementById('register-feedback').innerText = 'Username already taken. Try another one! 🚫';
+                } else {
+                    users[newUsername] = newPassword;
+                    document.getElementById('register-feedback').innerText = 'Registration successful! You can now log in. 🎉';
+                    registrationSection.style.display = 'none';
+                }
+            }
+
+            function generateQuestion() {
+                let num1, num2, operation, answer;
+                num1 = Math.floor(Math.random() * 10) + 1;
+                num2 = Math.floor(Math.random() * 10) + 1;
+
+                if (currentDifficulty === 'easy') {
+                    operation = '+';
+                    answer = num1 + num2;
+                } else if (currentDifficulty === 'medium') {
+                    operation = '-';
+                    answer = num1 - num2;
+                } else {
+                    operation = '*';
+                    answer = num1 * num2;
+                }
+                currentQuestion = { num1, num2, operation, answer };
+                document.getElementById('question').innerText = `${num1} ${operation} ${num2} = ?`;
+                document.getElementById('feedback').innerText = '';
+                document.getElementById('hint-text').style.display = 'none';
+            }
+
+            function checkAnswer() {
+                const userAnswer = parseInt(document.getElementById('answer').value);
+                if (userAnswer === currentQuestion.answer) {
+                    score++;
+                    document.getElementById('feedback').innerText = 'Correct! 🎉';
+                    triggerConfetti(); // Trigger confetti when the answer is correct
+                    generateQuestion();
+                } else {
+                    document.getElementById('feedback').innerText = 'Oops! Try again. 😕';
+                }
+                document.getElementById('answer').value = ''; // Clear the answer input
+            }
+
+            function showHint() {
+                document.getElementById('hint-text').style.display = 'block';
+            }
+
+            function triggerConfetti() {
+                canvas.style.display = 'block'; // Show the canvas
+                const confetti = [];
+                const colors = ['#FF0', '#0F0', '#00F', '#F00', '#FF00', '#00FF'];
+
+                for (let i = 0; i < 100; i++) {
+                    confetti.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        radius: Math.random() * 5 + 2,
+                        speed: Math.random() * 3 + 1
+                    });
+                }
+
+                function drawConfetti() {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    confetti.forEach(part => {
+                        context.beginPath();
+                        context.arc(part.x, part.y, part.radius, 0, Math.PI * 2);
+                        context.fillStyle = part.color;
+                        context.fill();
+                        part.y -= part.speed; // Move upwards
+                        if (part.y < 0) {
+                            part.y = canvas.height; // Reset to bottom if it goes off screen
+                        }
+                    });
+                    requestAnimationFrame(drawConfetti);
+                }
+
+                drawConfetti();
+                setTimeout(() => {
+                    canvas.style.display = 'none'; // Hide the canvas after some time
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>

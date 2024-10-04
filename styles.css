@@ -1,0 +1,142 @@
+body {
+    font-family: 'Comic Neue', cursive;
+    background-color: #e0f7fa; /* Light blue background */
+    color: #333;
+}
+
+header {
+    background: linear-gradient(90deg, #ffcc00, #ff6666); /* Gradient header */
+    padding: 20px;
+    text-align: center;
+    border-bottom: 5px solid #ffcc00; /* Bright yellow border */
+}
+
+h1 {
+    font-size: 3em; /* Main heading size */
+    text-shadow: 2px 2px #ff0000; /* Red shadow for a fun effect */
+}
+
+nav ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+}
+
+nav ul li {
+    display: inline; /* Horizontal list items */
+    margin: 0 15px; /* Spacing between items */
+}
+
+nav a {
+    color: white; /* Link text color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold link text */
+    font-size: 1.5em; /* Larger font size for links */
+}
+
+nav a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+section {
+    margin: 20px; /* Space around sections */
+    padding: 20px; /* Padding inside sections */
+    background-color: #ffffff; /* White background for content */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    border: 3px dashed #ffcc00; /* Dashed yellow border */
+}
+
+h2 {
+    color: #ff6666; /* Bright pink color for subheadings */
+    margin-top: 0; /* Prevent extra space above heading */
+}
+
+.login-container {
+    margin-top: 10px; /* Space above the login container */
+}
+
+.login-container input {
+    padding: 10px; /* Padding inside input fields */
+    border: 2px solid #ff6666; /* Pink border for input */
+    border-radius: 5px; /* Rounded corners */
+    margin: 5px 0; /* Vertical spacing */
+    width: 100%; /* Full width of container */
+    max-width: 300px; /* Max width for responsiveness */
+    font-size: 1.2em; /* Larger input text */
+}
+
+#difficulty {
+    padding: 10px; /* Padding for the dropdown */
+    border: 2px solid #ff6666; /* Pink border for dropdown */
+    border-radius: 5px; /* Rounded corners */
+    margin: 10px 0; /* Space above and below */
+    background-color: #f9fbe7; /* Light background for dropdown */
+    font-size: 1.2em; /* Larger dropdown text */
+    color: #333; /* Dark text for readability */
+}
+
+#difficulty option {
+    background-color: #ffffff; /* White background for options */
+    color: #333; /* Dark text for options */
+}
+
+#contact-form {
+    display: flex; /* Flexbox layout for the form */
+    flex-direction: column; /* Stack items vertically */
+}
+
+#contact-form input,
+#contact-form textarea {
+    padding: 10px; /* Padding for input fields and textarea */
+    border: 2px solid #ff6666; /* Pink border */
+    border-radius: 5px; /* Rounded corners */
+    margin: 5px 0; /* Vertical spacing */
+    width: 100%; /* Full width of container */
+    max-width: 300px; /* Max width for responsiveness */
+    font-size: 1.2em; /* Larger input text */
+}
+
+.styled-button {
+    padding: 10px; /* Padding inside buttons */
+    background-color: #ff6666; /* Pink background for buttons */
+    color: white; /* Button text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1.2em; /* Larger button text */
+    margin: 5px; /* Spacing between buttons */
+    transition: background-color 0.3s; /* Smooth transition on hover */
+    width: 100%; /* Full width of container */
+    max-width: 200px; /* Max width for buttons */
+}
+
+.styled-button:hover {
+    background-color: #ffcc00; /* Change button color on hover */
+}
+
+.confetti {
+    position: fixed; /* Fixes confetti in the viewport */
+    top: 0; /* Starts from the top */
+    width: 10px; /* Confetti width */
+    height: 10px; /* Confetti height */
+    border-radius: 50%; /* Makes confetti circular */
+    opacity: 0; /* Initially transparent */
+    animation: fall linear forwards; /* Fall animation */
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh); /* Move confetti down */
+        opacity: 1; /* Fade in */
+    }
+}
+
+.game-container {
+    text-align: center; /* Center game content */
+}
+
+.question-text {
+    font-size: 1.5em; /* Larger text for the question */
+    margin-bottom: 10px; /* Space below the question */
+    color: #00796b; /* Dark teal for question text */
+}
